@@ -1,18 +1,19 @@
-# contorno
+# Contorno 🧠
 
-A new Flutter project.
+O **Contorno** é um sistema completo desenhado para a gestão e logística de consultórios de psicologia. O objetivo do projeto é digitalizar e organizar o *setting* terapêutico, eliminando os atritos burocráticos (como agendamentos, faltas e controle financeiro) para que o foco permaneça exclusivamente no vínculo entre profissional e paciente.
 
-## Getting Started
+## 🚀 Tecnologias e Arquitetura
 
-This project is a starting point for a Flutter application.
+O projeto é estruturado focado em escalabilidade, manutenção e separação clara de responsabilidades:
 
-A few resources to get you started if this is your first Flutter project:
+* **Frontend Mobile:** Flutter & Dart
+* **Gerenciamento de Estado:** BLoC / Cubit
+* **Padrão Arquitetural:** Clean Architecture
+* **Backend / API:** Go
+* **Banco de Dados / BaaS:** Supabase
 
-- [Learn Flutter](https://docs.flutter.dev/get-started/learn-flutter)
-- [Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Flutter learning resources](https://docs.flutter.dev/reference/learning-resources)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
-# contorno
+## 🎯 Principais Funcionalidades (MVP)
+- [ ] Gestão inteligente de agenda e horários.
+- [ ] Controle financeiro e de pagamentos.
+- [ ] Prontuários seguros e histórico de evolução.
+- [ ] Lembretes automáticos para redução de *no-shows*.
