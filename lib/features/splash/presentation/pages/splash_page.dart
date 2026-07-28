@@ -3,6 +3,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:contorno/features/auth/presentation/cubit/auth_cubit.dart';
 import 'package:contorno/features/auth/presentation/cubit/auth_state.dart';
+import '../widgets/brand_backdrop.dart';
+import '../widgets/brand_logo.dart';
 
 class SplashPage extends StatefulWidget {
   const SplashPage({super.key});
@@ -11,77 +13,86 @@ class SplashPage extends StatefulWidget {
   State<SplashPage> createState() => _SplashPageState();
 }
 
-class _SplashPageState extends State<SplashPage> {
+class _SplashPageState extends State<SplashPage>
+    with SingleTickerProviderStateMixin {
+  late AnimationController _animController;
+  late Animation<double> _fadeAnimation;
+  late Animation<double> _scaleAnimation;
+
+  AuthState? _pendingState;
+  bool _timerDone = false;
+
   @override
   void initState() {
     super.initState();
+
+    _animController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 1500),
+    );
+
+    _fadeAnimation = CurvedAnimation(
+      parent: _animController,
+      curve: Curves.easeOut,
+    );
+
+    _scaleAnimation = Tween<double>(begin: 0.88, end: 1.0).animate(
+      CurvedAnimation(parent: _animController, curve: Curves.easeOutCubic),
+    );
+
+    _animController.forward();
+
+    // Dispara a checagem de autenticação no Cubit
     context.read<AuthCubit>().checkAuth();
+
+    // Temporizador de 2.5s para transição
+    Future.delayed(const Duration(milliseconds: 2500), () {
+      if (!mounted) return;
+      setState(() {
+        _timerDone = true;
+      });
+      _navegarSePronto();
+    });
+  }
+
+  @override
+  void dispose() {
+    _animController.dispose();
+    super.dispose();
+  }
+
+  void _navegarSePronto() {
+    if (!_timerDone || _pendingState == null || !mounted) return;
+
+    if (_pendingState is AuthAuthenticated) {
+      context.go('/');
+    } else {
+      context.go('/login');
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-
     return Scaffold(
       body: BlocListener<AuthCubit, AuthState>(
         listener: (context, state) {
-          if (state is AuthAuthenticated) {
-            context.go('/');
-          } else if (state is AuthUnauthenticated || state is AuthError) {
-            context.go('/login');
-          }
+          _pendingState = state;
+          _navegarSePronto();
         },
-        child: Container(
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              colors: [
-                theme.colorScheme.primary,
-                theme.colorScheme.primary.withValues(alpha: 0.85),
-              ],
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
-            ),
-          ),
-          child: Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Container(
-                  padding: const EdgeInsets.all(20),
-                  decoration: BoxDecoration(
-                    color: Colors.white.withValues(alpha: 0.1),
-                    shape: BoxShape.circle,
-                  ),
-                  child: const Icon(
-                    Icons.psychology,
-                    size: 80,
-                    color: Colors.white,
+        child: BrandBackdrop(
+          child: Stack(
+            children: [
+              // Logotipo Central (Roseta + Wordmark + Tagline)
+              Center(
+                child: FadeTransition(
+                  opacity: _fadeAnimation,
+                  child: ScaleTransition(
+                    scale: _scaleAnimation,
+                    child: const BrandLogo(),
                   ),
                 ),
-                const SizedBox(height: 24),
-                Text(
-                  'Contorno',
-                  style: theme.textTheme.headlineLarge?.copyWith(
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
-                    letterSpacing: 2.0,
-                  ),
-                ),
-                const SizedBox(height: 8),
-                Text(
-                  'Setting Terapêutico Digital',
-                  style: theme.textTheme.bodyMedium?.copyWith(
-                    color: Colors.white70,
-                    letterSpacing: 1.1,
-                  ),
-                ),
-                const SizedBox(height: 48),
-                const CircularProgressIndicator(
-                  valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
-                  strokeWidth: 3,
-                ),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
       ),

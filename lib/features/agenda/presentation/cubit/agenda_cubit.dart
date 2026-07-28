@@ -147,4 +147,20 @@ class AgendaCubit extends Cubit<AgendaState> {
       emit(AgendaError('Erro ao reagendar a sessão.'));
     }
   }
+
+  Future<void> atualizarAgendamento(AgendamentoEntity agendamento) async {
+    try {
+      await agendaRepository.atualizarStatusAgendamento(
+        agendamento.id,
+        agendamento.status,
+      );
+      await agendaRepository.reagendarSessao(
+        agendamento.id,
+        agendamento.dataHora,
+      );
+      await carregarAgendamentos(_dataAtual);
+    } catch (e) {
+      emit(AgendaError('Erro ao atualizar agendamento.'));
+    }
+  }
 }

@@ -21,8 +21,7 @@ class AppWidget extends StatelessWidget {
             title: 'Contorno Psi',
             debugShowCheckedModeBanner: false,
             theme: AppTheme.lightTheme,
-            darkTheme: AppTheme.darkTheme,
-            themeMode: themeController.themeMode,
+            themeMode: ThemeMode.light,
             routerConfig: appRouter,
             localizationsDelegates: const [
               GlobalMaterialLocalizations.delegate,

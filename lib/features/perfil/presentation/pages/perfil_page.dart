@@ -7,7 +7,6 @@ import 'package:screenshot/screenshot.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:contorno/core/theme/theme_controller.dart';
 import 'package:contorno/features/auth/presentation/cubit/auth_cubit.dart';
 
 import 'package:image_picker/image_picker.dart';
@@ -506,21 +505,16 @@ class _PerfilPageState extends State<PerfilPage> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final isDark = Theme.of(context).brightness == Brightness.dark;
     final user = Supabase.instance.client.auth.currentUser;
     final email = user?.email ?? 'psicologo@contorno.app';
     final nome = user?.userMetadata?['nome'] ?? 'Psicólogo(a)';
 
-    final cardBgColor = isDark ? const Color(0xFF1E1E2C) : Colors.white;
-    final secondaryTextColor = isDark
-        ? Colors.grey.shade400
-        : Colors.grey.shade600;
-    final borderColor = isDark ? Colors.white12 : Colors.black12;
+    const cardBgColor = Colors.white;
+    final secondaryTextColor = Colors.grey.shade600;
+    const borderColor = Colors.black12;
 
     return Scaffold(
-      backgroundColor: isDark
-          ? const Color(0xFF121212)
-          : const Color(0xFFF4F3F8),
+      backgroundColor: const Color(0xFFF4F3F8),
       body: ListView(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
         children: [
@@ -695,10 +689,7 @@ class _PerfilPageState extends State<PerfilPage> {
                         ['50 minutos', '60 minutos'].contains(_duracaoSessao)
                         ? _duracaoSessao
                         : '50 minutos',
-                    style: TextStyle(
-                      fontSize: 14,
-                      color: isDark ? Colors.white : Colors.black87,
-                    ),
+                    style: const TextStyle(fontSize: 14, color: Colors.black87),
                     decoration: InputDecoration(
                       labelText: 'Duração',
                       prefixIcon: const Icon(Icons.timer_outlined, size: 20),
@@ -731,28 +722,6 @@ class _PerfilPageState extends State<PerfilPage> {
             ),
           ),
           const SizedBox(height: 20),
-
-          // // 4. PREFERÊNCIAS DO APP
-          // _buildGroupHeader('Preferências', secondaryTextColor),
-          // Container(
-          //   decoration: BoxDecoration(
-          //     color: cardBgColor,
-          //     borderRadius: BorderRadius.circular(12),
-          //     border: Border.all(color: borderColor),
-          //   ),
-          //   child: SwitchListTile(
-          //     secondary: const Icon(Icons.dark_mode_outlined, size: 20),
-          //     title: const Text(
-          //       'Modo Escuro (Dark Mode)',
-          //       style: TextStyle(fontSize: 14),
-          //     ),
-          //     value: isDark,
-          //     onChanged: (val) {
-          //       themeController.toggleTheme(val);
-          //     },
-          //   ),
-          // ),
-          // const SizedBox(height: 20),
 
           // 5. SUPORTE E LEGAL
           _buildGroupHeader('Suporte e Legal', secondaryTextColor),
